@@ -1,0 +1,37 @@
+version: '3'
+services:
+    db:
+      container_name: postgres
+      image: postgres:latest
+      env_file: db.conf
+      ports:
+       - 5432:5432
+    rabbit:
+      image: "rabbitmq:3-management"
+    first_app:
+      restart: always
+      environment:
+       - PYTHONUNBUFFERED=1
+      depends_on:
+       - rabbit
+       - db
+      build: 
+        context: "./first_app"
+      ports:
+       - "5000:5000"
+      links:
+       - rabbit
+       - db
+  #  sender:
+  #    restart: always
+  #    environment:
+  #     - PYTHONUNBUFFERED=1
+  #    depends_on:
+  #     - rabbit
+  #     - db
+  #    build: 
+  #      context: "./sender"
+  #    volumes:
+  #     - .:/code
+  #    links:
+  #     - rabbit
