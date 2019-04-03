@@ -1,0 +1,8 @@
+FROM python:3
+ADD . src
+WORKDIR /src
+ADD consumer.py /src
+ADD requirements.txt /src
+ADD wait-for-it.sh /src
+RUN pip install -r /src/requirements.txt
+CMD ["/src/wait-for-it.sh", "rabbit:5672", "--", "python", "-u", "/src/consumer.py"]
